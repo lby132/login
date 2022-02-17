@@ -38,6 +38,7 @@ public class MemberRepository {
     }
 
     public List<Member> findAll() {
+        log.info("findAll={}",store.values());
         return new ArrayList<>(store.values());
     }
 
