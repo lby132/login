@@ -13,6 +13,7 @@ public class MemberRepository {
     private static long sequence = 0L; // static 사용
 
     public Member save(Member member) {
+
         member.setId(++sequence);
         log.info("save: member={}", member);
         store.put(member.getId(), member);
@@ -20,6 +21,7 @@ public class MemberRepository {
     }
 
     public Member findById(Long id) {
+        log.info("idddd={}",id);
         return store.get(id);
     }
 
@@ -46,3 +48,4 @@ public class MemberRepository {
         store.clear();
     }
 }
+
