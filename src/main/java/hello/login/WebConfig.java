@@ -3,14 +3,16 @@ package hello.login;
 import hello.login.web.LogFilter;
 import hello.login.web.argumentresolver.LoginMemberArgumentResolver;
 import hello.login.web.filter.LoginCheckFilter;
+import hello.login.web.filter.interceptor.LogInterceptor;
+import hello.login.web.filter.interceptor.LoginCheckInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.Filter;
-import javax.servlet.FilterRegistration;
 import java.util.List;
 
 @Configuration
@@ -21,7 +23,20 @@ public class WebConfig implements WebMvcConfigurer {
         resolvers.add(new LoginMemberArgumentResolver());
     }
 
-    @Bean
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LogInterceptor())
+                .order(1)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/css/**", "/*.ico", "/error");
+
+        registry.addInterceptor(new LoginCheckInterceptor())
+                .order(2)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/css/**", "/*.ico", "/error");
+    }
+
+//    @Bean
     public FilterRegistrationBean logFilter() {
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
         filterFilterRegistrationBean.setFilter(new LogFilter());
@@ -31,7 +46,7 @@ public class WebConfig implements WebMvcConfigurer {
         return filterFilterRegistrationBean;
     }
 
-    @Bean
+//    @Bean
     public FilterRegistrationBean loginCheckFilter() {
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
         filterFilterRegistrationBean.setFilter(new LoginCheckFilter());

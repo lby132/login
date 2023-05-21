@@ -21,7 +21,6 @@ public class MemberRepository {
     }
 
     public Member findById(Long id) {
-        log.info("idddd={}",id);
         return store.get(id);
     }
 
