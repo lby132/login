@@ -1,5 +1,6 @@
 package hello.login.web.filter.interceptor;
 
+import hello.login.web.SessionConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -19,12 +20,13 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession();
 
-        if (session == null) {
+        if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null) {
             log.info("미인증 사용자 요청");
             //로그인으로 redirect
-            response.sendRedirect("login?redirectURL=" + requestURI);
+            response.sendRedirect("/login?redirectURL=" + requestURI);
             return false;
         }
+
         return true;
     }
 }
